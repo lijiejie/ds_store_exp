@@ -44,9 +44,10 @@ class Scanner(object):
                 try:
                     response = urllib2.urlopen(url)
                 except Exception, e:
-                    self.lock.acquire()
-                    print '[Fail] %s' % url
-                    self.lock.release()
+                    if str(e) == 'HTTP Error 403: Forbidden':
+                        self.lock.acquire()
+                        print '[Folder Found] %s' % url
+                        self.lock.release()
                     continue
                 data = response.read()
 
