@@ -44,6 +44,9 @@ class Scanner(object):
                 try:
                     response = urllib2.urlopen(url)
                 except Exception, e:
+                    self.lock.acquire()
+                    print '[Fail] %s' % url
+                    self.lock.release()
                     continue
                 data = response.read()
 
@@ -65,8 +68,9 @@ class Scanner(object):
                         for x in d.traverse():
                             dirs_files.add(x.filename)
                         for name in dirs_files:
-                            self.queue.put(base_url + name)
-                            self.queue.put(base_url + name + '/.DS_Store')
+                            if name != '.':
+                                self.queue.put(base_url + name)
+                                self.queue.put(base_url + name + '/.DS_Store')
                         d.close()
             except:
                 pass
