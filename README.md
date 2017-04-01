@@ -1,5 +1,4 @@
-ds\_store\_exp
-=
+# ds\_store\_exp #
 
 A .DS_Store file disclosure exploit. 
 
@@ -9,7 +8,7 @@ It parse .DS_Store file and download files recursively.
 
     Usage: python ds_store_exp.py http://www.example.com/.DS_Store
 
-## 示例
+## Example ##
 
 	ds_store_exp.py http://hd.zj.qq.com/themes/galaxyw/.DS_Store
 
@@ -86,5 +85,5 @@ It parse .DS_Store file and download files recursively.
 	
 	21 directories, 48 files
 
-##Thanks##
+## Thanks ##
 DS_Store parser is based on [ds_store 1.1.0](https://pypi.python.org/pypi/ds_store/1.1.0) 
