@@ -66,7 +66,7 @@ class Scanner(object):
                         d = DSStore.open(ds_store_file)
 
                         dirs_files = set()
-                        for x in d.traverse():
+                        for x in d:
                             dirs_files.add(x.filename)
                         for name in dirs_files:
                             if name != '.':
