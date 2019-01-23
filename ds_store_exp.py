@@ -38,8 +38,6 @@ class Scanner(object):
                 else:
                     self.processed_url.add(url)
                 base_url = url.rstrip('.DS_Store')
-                if not url.lower().startswith('http'):
-                    url = 'http://%s' % url
                 schema, netloc, path, _, _, _ = urlparse.urlparse(url, 'http')
                 try:
                     response = urllib2.urlopen(url)
@@ -85,6 +83,28 @@ class Scanner(object):
             all_threads.append(t)
             t.start()
 
+        for thread in all_threads:
+            thread.join()
+
+
+def format_results(current_dir, indent=''):
+    current_dir_file_list = os.listdir(current_dir)
+
+    for index, file_name in enumerate(current_dir_file_list):
+        if index != len(current_dir_file_list) - 1:  # not last
+            current_level_indent = "├── "
+            sub_level_indent = "|   "
+        else:  # last file in current directory
+            current_level_indent = "└── "
+            sub_level_indent = "    "
+
+        file_path = "%s/%s" % (current_dir, file_name)
+        if os.path.isdir(file_path):
+            print("%s%s+ %s" % (indent, current_level_indent, file_name))
+            format_results(file_path, indent=indent + sub_level_indent)
+        else:
+            print("%s%s%s" % (indent, current_level_indent, file_name))
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
@@ -94,5 +114,15 @@ if __name__ == '__main__':
         print
         print '    Usage: python ds_store_exp.py http://www.example.com/.DS_Store'
         sys.exit(0)
-    s = Scanner(sys.argv[1])
+
+    target_url = sys.argv[1]
+    if not target_url.lower().startswith('http'):
+        target_url = 'http://%s' % target_url
+
+    s = Scanner(target_url)
     s.scan()
+
+    # print directory structure
+    result_folder = urlparse.urlparse(target_url, 'http')[1].replace(':', '_')
+    print '\n' + result_folder
+    format_results(result_folder)
