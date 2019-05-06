@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-# LiJiejie    my[at]lijiejie.com    http://www.lijiejie.com
+# LiJieJie    my[at]lijiejie.com    http://www.lijiejie.com
 
 import sys
 import urllib2
@@ -13,6 +13,7 @@ import threading
 from ds_store import DSStore
 
 context = ssl._create_unverified_context()
+
 
 class Scanner(object):
     def __init__(self, start_url):
@@ -29,7 +30,7 @@ class Scanner(object):
                 self.lock.acquire()
                 self.working_thread += 1
                 self.lock.release()
-            except Exception, e:
+            except Exception as e:
                 if self.working_thread == 0:
                     break
                 else:
@@ -93,9 +94,8 @@ class Scanner(object):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print 'A .DS_Store file disclosure exploit. By LiJieJie'
-        print
-        print 'It parse .DS_Store and download file recursively.'
+        print 'A .DS_Store file disclosure exploit.'
+        print 'It parses .DS_Store and downloads file recursively.'
         print
         print '    Usage: python ds_store_exp.py http://www.example.com/.DS_Store'
         sys.exit(0)

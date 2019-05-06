@@ -1,12 +1,16 @@
 # ds\_store\_exp #
 
-A .DS_Store file disclosure exploit. 
+A **`.DS_Store`** file disclosure exploit. 
 
-It parse .DS_Store file and download files recursively.
+It parses .DS_Store file and downloads files recursively.
 
-这是一个.DS\_Store文件泄漏利用脚本，它解析.DS_Store文件并递归地下载文件到本地。
+这是一个 .DS\_Store 文件泄漏利用脚本，它解析.DS_Store文件并递归地下载文件到本地。
 
     Usage: python ds_store_exp.py http://www.example.com/.DS_Store
+
+## Install ##
+
+	pip install -r requirements.txt
 
 ## Example ##
 
@@ -84,6 +88,3 @@ It parse .DS_Store file and download files recursively.
 	                        └── jquery.min.js
 	
 	21 directories, 48 files
-
-## Thanks ##
-DS_Store parser is based on [ds_store 1.1.0](https://pypi.python.org/pypi/ds_store/1.1.0) 
