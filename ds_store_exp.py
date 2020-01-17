@@ -49,7 +49,7 @@ class Scanner(object):
                 except Exception, e:
                     if e.code != 404:
                         self.lock.acquire()
-                        print '[%s] %s' % (e.code, url)
+                        print '\033[91m[%s]\033[00m %s' % (e.code, url)
                         self.lock.release()
                     continue
 
@@ -61,7 +61,7 @@ class Scanner(object):
                         os.makedirs(folder_name)
                     with open(netloc.replace(':', '_') + path, 'wb') as outFile:
                         self.lock.acquire()
-                        print '[%s] %s' % (response.code, url)
+                        print '\033[92m[%s]\033[00m %s' % (response.code, url)
                         self.lock.release()
                         outFile.write(data)
                     if url.endswith('.DS_Store'):
@@ -79,7 +79,7 @@ class Scanner(object):
                         d.close()
             except Exception as e:
                 self.lock.acquire()
-                print '[!] %s' % str(e)
+                print '\033[93m[!]\033[00m %s' % str(e)
                 self.lock.release()
             finally:
                 self.working_thread -= 1
