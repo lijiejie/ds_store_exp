@@ -47,7 +47,7 @@ class Scanner(object):
                 try:
                     response = urllib2.urlopen(url, context=context)
                 except Exception, e:
-                    if e.code != 404:
+                    if hasattr(e, 'code') and  e.code != 404:
                         self.lock.acquire()
                         print '[%s] %s' % (e.code, url)
                         self.lock.release()
