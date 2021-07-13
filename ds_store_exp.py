@@ -46,7 +46,7 @@ class Scanner(object):
                 if not url.lower().startswith('http'):
                     url = f'http://{url}'
                 schema, netloc, path, _, _, _ = urlparse(url, 'http')
-                response = requests.get(url, headers=headers)
+                response = requests.get(url, headers=headers, verify=False)
                 if response.status_code not in [200, 404]:
                     self.lock.acquire()
                     print(f"[{response.status_code}] {url}")
