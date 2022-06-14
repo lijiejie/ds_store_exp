@@ -3,21 +3,26 @@
 # LiJieJie    my[at]lijiejie.com    http://www.lijiejie.com
 
 import sys
-import urllib2
-import cStringIO
-import urlparse
+from urllib.parse import urlparse
 import os
-import Queue
+import queue
 import ssl
 import threading
+from io import StringIO
 from ds_store import DSStore
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
 
 context = ssl._create_unverified_context()
 
 
 class Scanner(object):
     def __init__(self, start_url):
-        self.queue = Queue.Queue()
+        self.queue = queue.Queue()
         self.queue.put(start_url)
         self.processed_url = set()
         self.lock = threading.Lock()
@@ -43,7 +48,7 @@ class Scanner(object):
                 base_url = url.rstrip('.DS_Store')
                 if not url.lower().startswith('http'):
                     url = f'http://{url}'
-                schema, netloc, path, _, _, _ = urlparse.urlparse(url, 'http')
+                schema, netloc, path, _, _, _ = urlparse(url, 'http')
                 try:
                     response = urllib2.urlopen(url, context=context)
                 except Exception as e:
@@ -65,7 +70,7 @@ class Scanner(object):
                         self.lock.release()
                         outFile.write(data)
                     if url.endswith('.DS_Store'):
-                        ds_store_file = cStringIO.StringIO()
+                        ds_store_file = StringIO()
                         ds_store_file.write(data)
                         d = DSStore.open(ds_store_file)
 
