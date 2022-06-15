@@ -10,7 +10,7 @@ It parses .DS_Store file and downloads files recursively.
 
 ## Install ##
 
-	pip install -r requirements.txt
+	pip install ds-store requests
 
 ## Example ##
 
