@@ -22,6 +22,19 @@ class Scanner(object):
         self.processed_url = set()
         self.lock = threading.Lock()
         self.working_thread = 0
+        self.dest_dir = os.path.abspath('.')
+
+    def is_valid_name(self, entry_name):
+        if entry_name.find('..') >= 0 or \
+                entry_name.startswith('/') or \
+                entry_name.startswith('\\') or \
+                not os.path.abspath(entry_name).startswith(self.dest_dir):
+            try:
+                print('[ERROR] Invalid entry name: %s' % entry_name)
+            except Exception as e:
+                pass
+            return False
+        return True
 
     def process(self):
         while True:
@@ -45,7 +58,7 @@ class Scanner(object):
                     url = 'http://%s' % url
                 schema, netloc, path, _, _, _ = urlparse(url, 'http')
                 try:
-                    response = requests.get(url)
+                    response = requests.get(url, allow_redirects=False)
                 except Exception as e:
                     self.lock.acquire()
                     print('[ERROR] %s' % str(e))
@@ -68,7 +81,8 @@ class Scanner(object):
 
                         dirs_files = set()
                         for x in d._traverse(None):
-                            dirs_files.add(x.filename)
+                            if self.is_valid_name(x.filename):
+                                dirs_files.add(x.filename)
                         for name in dirs_files:
                             if name != '.':
                                 self.queue.put(base_url + name)
