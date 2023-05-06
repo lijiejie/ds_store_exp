@@ -1,26 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 # LiJieJie    my[at]lijiejie.com    http://www.lijiejie.com
 
-import sys
-from urllib.parse import urlparse
 import os
 import queue
 import ssl
+import sys
 import threading
 from io import StringIO
+from urllib.parse import urlparse
+from urllib.request import urlopen
+
 from ds_store import DSStore
-try:
-    # For Python 3.0 and later
-    from urllib.request import urlopen
-except ImportError:
-    # Fall back to Python 2's urllib2
-    from urllib2 import urlopen
 
 context = ssl._create_unverified_context()
 
 
-class Scanner(object):
+class Scanner:
     def __init__(self, start_url):
         self.queue = queue.Queue()
         self.queue.put(start_url)
@@ -50,9 +46,9 @@ class Scanner(object):
                     url = f'http://{url}'
                 schema, netloc, path, _, _, _ = urlparse(url, 'http')
                 try:
-                    response = urllib2.urlopen(url, context=context)
+                    response = urlopen(url, context=context)
                 except Exception as e:
-                    if hasattr(e, 'code') and  e.code != 404:
+                    if hasattr(e, 'code') and e.code != 404:
                         self.lock.acquire()
                         print(f'[{e.code}] {url}')
                         self.lock.release()
